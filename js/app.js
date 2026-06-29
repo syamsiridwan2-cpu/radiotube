@@ -581,7 +581,7 @@ function renderStations(stations) {
 
     grid.querySelectorAll('.station-card').forEach(function(card) {
         card.addEventListener('click', function(e) {
-            if (e.target.closest('.fav-btn') || e.target.closest('.add-playlist-btn') || e.target.closest('.pl-remove-btn') || e.target.closest('.pl-move-btn')) return;
+            if (e.target.closest('.fav-btn') || e.target.closest('.share-btn') || e.target.closest('.add-playlist-btn') || e.target.closest('.pl-remove-btn') || e.target.closest('.pl-move-btn')) return;
             var idx = parseInt(card.dataset.index);
             playStation(idx);
         });
