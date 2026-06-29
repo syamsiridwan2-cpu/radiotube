@@ -1,8 +1,64 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
-  <rect width="192" height="192" rx="32" fill="#1a73e8"/>
-  <circle cx="96" cy="80" r="35" fill="none" stroke="white" stroke-width="6"/>
-  <rect x="88" y="115" width="16" height="40" rx="8" fill="white"/>
-  <circle cx="96" cy="80" r="12" fill="white"/>
-  <path d="M60 55 Q96 20 132 55" fill="none" stroke="white" stroke-width="5" stroke-linecap="round"/>
-  <path d="M48 45 Q96 0 144 45" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a1628"/>
+      <stop offset="100%" stop-color="#1a0a28"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="100%" stop-color="#ff8866"/>
+    </linearGradient>
+    <linearGradient id="radioBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a2a3a"/>
+      <stop offset="100%" stop-color="#2a1a3a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="50%" stop-color="#00a8cc"/>
+      <stop offset="100%" stop-color="#ff8866"/>
+    </linearGradient>
+    <filter id="glowFilter">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="192" height="192" rx="40" fill="url(#bg)"/>
+
+  <!-- Glow border -->
+  <rect x="4" y="4" width="184" height="184" rx="38" fill="none" stroke="url(#glow)" stroke-width="2" opacity="0.5"/>
+
+  <!-- Radio body -->
+  <rect x="40" y="60" width="112" height="80" rx="12" fill="url(#radioBody)" stroke="url(#accent)" stroke-width="1.5" opacity="0.9"/>
+
+  <!-- Antenna -->
+  <line x1="70" y1="60" x2="70" y2="36" stroke="#00d4ff" stroke-width="2.5" stroke-linecap="round" filter="url(#glowFilter)"/>
+  <circle cx="70" cy="34" r="3" fill="#00d4ff" filter="url(#glowFilter)"/>
+
+  <!-- Signal waves -->
+  <path d="M78 38 Q88 28 98 38" fill="none" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" opacity="0.8" filter="url(#glowFilter)"/>
+  <path d="M82 44 Q90 36 98 44" fill="none" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+  <path d="M86 50 Q92 44 98 50" fill="none" stroke="#00d4ff" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- Speaker circle -->
+  <circle cx="72" cy="100" r="20" fill="none" stroke="#00d4ff" stroke-width="2" opacity="0.8"/>
+  <circle cx="72" cy="100" r="12" fill="none" stroke="#00d4ff" stroke-width="1.5" opacity="0.6"/>
+  <circle cx="72" cy="100" r="4" fill="#00d4ff" opacity="0.9"/>
+
+  <!-- Play button triangle -->
+  <path d="M108 84 L108 116 L130 100 Z" fill="none" stroke="url(#accent)" stroke-width="2" stroke-linejoin="round" filter="url(#glowFilter)"/>
+
+  <!-- Microphone inside play -->
+  <rect x="116" y="92" width="6" height="10" rx="3" fill="none" stroke="#ff8866" stroke-width="1.2" opacity="0.8"/>
+  <path d="M115 98 Q119 104 123 98" fill="none" stroke="#ff8866" stroke-width="1" opacity="0.6"/>
+  <line x1="119" y1="102" x2="119" y2="106" stroke="#ff8866" stroke-width="1" opacity="0.6"/>
+
+  <!-- Power button -->
+  <circle cx="128" cy="124" r="6" fill="none" stroke="#ff8866" stroke-width="1.5" opacity="0.7"/>
+  <line x1="128" y1="119" x2="128" y2="123" stroke="#ff8866" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Subtle wave decorations -->
+  <path d="M0 140 Q48 120 96 140 Q144 160 192 140" fill="none" stroke="#00d4ff" stroke-width="0.5" opacity="0.15"/>
+  <path d="M0 150 Q48 130 96 150 Q144 170 192 150" fill="none" stroke="#ff8866" stroke-width="0.5" opacity="0.1"/>
 </svg>

@@ -244,16 +244,16 @@
 </head>
 <body>
 
-    <div class="version-badge" id="versionBadge">v6.8.0</div>
+    <div class="version-badge" id="versionBadge">v6.9.0</div>
 
     <!-- Header -->
     <header class="header">
         <div class="header-left">
             <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
             <a href="#" class="logo" id="logoLink">
-                <span class="logo-icon">📻</span>
+                <span class="logo-icon"><img src="icons/icon-192.svg" alt="RadioStream" width="32" height="32" style="border-radius:8px;" /></span>
                 <span>RadioStream</span>
-                <span class="logo-version">v6.8</span>
+                <span class="logo-version">v6.9</span>
             </a>
         </div>
         <div class="header-center">
@@ -392,7 +392,7 @@
     <!-- CACHE CLEAR ON VERSION CHANGE + REGISTER SW -->
     <script>
         (async function bootstrap() {
-            const currentVersion = '6.8.0';
+            const currentVersion = '6.9.0';
             const savedVersion = localStorage.getItem('radio_version');
 
             if (savedVersion !== currentVersion) {
@@ -412,6 +412,6 @@
             }
         })();
     </script>
-    <script src="js/app.js?v=16"></script>
+    <script src="js/app.js?v=17"></script>
 </body>
 </html>
