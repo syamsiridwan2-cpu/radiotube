@@ -342,6 +342,10 @@
                 <button id="createPlaylistBtn" class="create-playlist-btn">
                     <span>+</span> Buat Playlist
                 </button>
+                <div class="playlist-actions">
+                    <button id="exportPlaylistsBtn" class="playlist-action-btn" aria-label="Export Playlist" title="Export Playlist">📤 Export</button>
+                    <button id="importPlaylistsBtn" class="playlist-action-btn" aria-label="Import Playlist" title="Import Playlist">📥 Import</button>
+                </div>
             </div>
         </nav>
 
@@ -403,6 +407,7 @@
     </div>
 
     <audio id="audio" preload="none"></audio>
+    <input type="file" id="importFileInput" accept=".json" style="display:none" />
 
     <!-- Sleep Timer Modal -->
     <div class="modal-overlay" id="sleepTimerModal" style="display:none;">

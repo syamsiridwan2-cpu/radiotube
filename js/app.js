@@ -445,6 +445,72 @@ function moveStationInPlaylist(playlistId, stationUuid, direction) {
     loadStations(true);
 }
 
+// ============================================================
+//  IMPORT / EXPORT PLAYLISTS
+// ============================================================
+function exportPlaylists() {
+    if (!state.playlists.length) {
+        showToast('Tidak ada playlist untuk di-export');
+        return;
+    }
+    var data = {
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        playlists: state.playlists.map(function(p) {
+            return { id: p.id, name: p.name, stations: p.stations, createdAt: p.createdAt };
+        })
+    };
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'radiostream-playlists-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('Playlist di-export');
+}
+
+function importPlaylists(file) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            var data = JSON.parse(e.target.result);
+            if (!data.version || !Array.isArray(data.playlists)) {
+                showToast('Format file tidak valid');
+                return;
+            }
+            // merge or replace? merge by default
+            var imported = 0;
+            data.playlists.forEach(function(importedPl) {
+                // check duplicate by name + station count
+                var exists = state.playlists.find(function(ep) { return ep.name === importedPl.name && ep.stations.length === (importedPl.stations || []).length; });
+                if (!exists) {
+                    state.playlists.push({
+                        id: importedPl.id || Date.now().toString(36) + Math.random().toString(36).substr(2),
+                        name: importedPl.name,
+                        stations: importedPl.stations || [],
+                        createdAt: importedPl.createdAt || new Date().toISOString()
+                    });
+                    imported++;
+                }
+            });
+            if (imported > 0) {
+                savePlaylists();
+                renderPlaylistSidebar();
+                showToast(imported + ' playlist di-import');
+                if (state.currentView.startsWith('playlist:')) loadStations(true);
+            } else {
+                showToast('Tidak ada playlist baru untuk di-import');
+            }
+        } catch (err) {
+            showToast('Gagal membaca file: ' + err.message);
+        }
+    };
+    reader.readAsText(file);
+}
+
 function renderPlaylistSidebar() {
     var container = $('playlistList');
     if (!container) return;
@@ -1413,6 +1479,13 @@ function init() {
             createPlaylist(name.trim());
             showToast('Playlist "' + name.trim() + '" dibuat');
         }
+    });
+
+    $('exportPlaylistsBtn').addEventListener('click', exportPlaylists);
+    $('importPlaylistsBtn').addEventListener('click', function() { $('importFileInput').click(); });
+    $('importFileInput').addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) importPlaylists(e.target.files[0]);
+        e.target.value = '';
     });
 
     var suggestionTimeout = null;

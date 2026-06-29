@@ -175,3 +175,28 @@
     font-size: 1.1rem;
     font-weight: 600;
 }
+
+.playlist-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.playlist-action-btn {
+    flex: 1;
+    padding: 6px 8px;
+    background: var(--bg-hover);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all var(--transition);
+    text-align: center;
+}
+
+.playlist-action-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-light);
+}
