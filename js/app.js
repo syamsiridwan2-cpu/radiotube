@@ -276,40 +276,8 @@ var icyState = { interval: 0, timer: null, url: '' };
 
 function startIcyMetadata(url) {
     stopIcyMetadata();
-    if (!url) return;
-    icyState.url = url;
-    fetch(url, { headers: { 'Icy-MetaData': '1' } }).then(function(res) {
-        var metaint = parseInt(res.headers.get('icy-metaint'), 10);
-        if (!metaint || metaint <= 0) return;
-        icyState.interval = metaint;
-        readIcyMetadata(url, metaint);
-        icyState.timer = setInterval(function() {
-            readIcyMetadata(url, icyState.interval);
-        }, 15000);
-    }).catch(function() {});
-}
-
-function readIcyMetadata(url, metaint) {
-    fetch(url, {
-        headers: { 'Icy-MetaData': '1', 'Range': 'bytes=' + metaint + '-' + (metaint + 255) }
-    }).then(function(res) { return res.text(); }).then(function(text) {
-        var metaLen = text.charCodeAt(0) * 16;
-        if (metaLen <= 0) return;
-        var raw = text.substr(1, metaLen).replace(/\0/g, '').trim();
-        if (!raw) return;
-        var m = raw.match(/StreamTitle='([^']*)'/);
-        if (m && m[1]) {
-            var title = m[1].trim();
-            if (title && title !== '-') {
-                var detailEl = $('playerStationDetail');
-                if (detailEl && !detailEl.textContent.includes('Menyambungkan')) {
-                    detailEl.textContent = title;
-                }
-                var npbDetail = $('npbDetail');
-                if (npbDetail) npbDetail.textContent = title;
-            }
-        }
-    }).catch(function() {});
+    // ponytail: ICY metadata requires server-side proxy for most streams
+    // due to CORS restrictions. Add when backend exists.
 }
 
 function stopIcyMetadata() {
