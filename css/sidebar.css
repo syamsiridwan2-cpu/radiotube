@@ -1,0 +1,177 @@
+/* ============================================================
+   SIDEBAR.CSS - v1.0.0
+   Sidebar Navigation
+   ============================================================ */
+
+/* Main Layout */
+.app-layout {
+    display: flex;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 16px;
+    gap: 16px;
+}
+
+/* Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    padding: 16px 0;
+    position: sticky;
+    top: calc(var(--header-height) + 8px);
+    height: calc(100vh - var(--header-height) - var(--player-height) - 30px);
+    overflow-y: auto;
+    transition: width var(--transition), transform var(--transition);
+    background: var(--bg-secondary);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 12px;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-section {
+    margin-bottom: 24px;
+}
+
+.sidebar-section .section-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0 12px;
+    margin-bottom: 8px;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.sidebar-item:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.sidebar-item.active {
+    background: var(--accent-light);
+    color: var(--accent);
+}
+
+.sidebar-item .item-icon {
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+}
+
+.sidebar-item .item-badge {
+    margin-left: auto;
+    background: var(--bg-hover);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+/* Sidebar Backdrop (Mobile) */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 89;
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+
+.sidebar-backdrop.active {
+    display: block;
+    opacity: 1;
+}
+
+/* ============================================================
+   PLAYLIST IN SIDEBAR
+   ============================================================ */
+
+.playlist-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.playlist-list .no-playlist-msg {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    padding: 8px 12px;
+    text-align: center;
+}
+
+.playlist-list .playlist-item {
+    position: relative;
+}
+
+.playlist-list .playlist-item .playlist-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.playlist-delete-btn {
+    background: none;
+    border: none;
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 2px 6px;
+    border-radius: 50%;
+    opacity: 0;
+    transition: all var(--transition);
+}
+
+.playlist-item:hover .playlist-delete-btn,
+.playlist-sidebar-item:hover .playlist-delete-btn {
+    opacity: 1;
+}
+
+.playlist-delete-btn:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.create-playlist-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 8px;
+    background: none;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.create-playlist-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-light);
+}
+
+.create-playlist-btn span {
+    font-size: 1.1rem;
+    font-weight: 600;
+}

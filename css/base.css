@@ -1,0 +1,52 @@
+/* ============================================================
+   BASE.CSS - v1.0.0
+   Reset, Scrollbar, Base Layout
+   ============================================================ */
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Base Layout */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background var(--transition), color var(--transition);
+    overflow-x: hidden;
+    min-height: 100vh;
+    padding-bottom: calc(var(--player-height) + 20px);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Touch-friendly targets */
+@media (pointer: coarse) {
+    .station-card {
+        min-height: 44px;
+    }
+    .sidebar-item {
+        min-height: 44px;
+    }
+    .header-btn {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}

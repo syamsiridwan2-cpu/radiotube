@@ -1,0 +1,60 @@
+/* ============================================================
+   VARIABLES.CSS - v1.0.0
+   CSS Custom Properties & Theme Variables
+   ============================================================ */
+
+:root {
+    /* Light Theme */
+    --bg-primary: #f8f9fa;
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
+    --bg-hover: #f1f3f4;
+    --bg-active: #e8eaed;
+    --bg-input: #f1f3f4;
+    --bg-sidebar: #ffffff;
+    --bg-player: #ffffff;
+    --bg-nowplaying: #f8f9fa;
+    --text-primary: #202124;
+    --text-secondary: #5f6368;
+    --text-muted: #9aa0a6;
+    --text-inverse: #ffffff;
+    --border: #dadce0;
+    --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.12);
+    --shadow-player: 0 -2px 16px rgba(0, 0, 0, 0.08);
+    --accent: #1a73e8;
+    --accent-hover: #1557b0;
+    --accent-light: #e8f0fe;
+    --accent-dark: #1a73e8;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-full: 50px;
+    --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --header-height: 64px;
+    --player-height: 72px;
+    --sidebar-width: 240px;
+    --sidebar-collapsed: 0px;
+}
+
+[data-theme="dark"] {
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-card: #212121;
+    --bg-hover: #2d2d2d;
+    --bg-active: #3d3d3d;
+    --bg-input: #2d2d2d;
+    --bg-sidebar: #1a1a1a;
+    --bg-player: #212121;
+    --bg-nowplaying: #1a1a1a;
+    --text-primary: #e8eaed;
+    --text-secondary: #b0b3b8;
+    --text-muted: #80868b;
+    --text-inverse: #202124;
+    --border: #3d3d3d;
+    --shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+    --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.6);
+    --shadow-player: 0 -2px 16px rgba(0, 0, 0, 0.6);
+    --accent: #1a73e8;
+    --accent-hover: #4d8cf7;
+    --accent-light: #1a2a4a;
+}

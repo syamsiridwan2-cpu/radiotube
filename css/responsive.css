@@ -1,0 +1,190 @@
+/* ============================================================
+   RESPONSIVE.CSS - v1.0.0
+   Media Queries for All Screen Sizes
+   ============================================================ */
+
+/* Large Desktop (1400px+) */
+@media (min-width: 1400px) {
+    .station-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+}
+
+/* Desktop (1200px) */
+@media (max-width: 1200px) {
+    .sidebar {
+        width: 220px;
+    }
+}
+
+/* Tablet Landscape (1024px) */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 200px;
+    }
+    .station-grid {
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    }
+}
+
+/* Tablet Portrait (900px) */
+@media (max-width: 900px) {
+    .station-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+    .header-center {
+        max-width: 400px;
+    }
+}
+
+/* Mobile Landscape (768px) */
+@media (max-width: 768px) and (orientation: landscape) {
+    .player {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        height: var(--player-height);
+    }
+    .player .player-volume {
+        display: none;
+    }
+}
+
+/* Mobile Portrait (768px) */
+@media (max-width: 768px) {
+    /* Sidebar */
+    .sidebar {
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        bottom: calc(var(--player-height) + 10px);
+        width: 280px;
+        transform: translateX(-100%);
+        z-index: 90;
+        border-radius: 0;
+        border: none;
+        border-right: 1px solid var(--border);
+        background: var(--bg-secondary);
+        padding: 16px;
+        transition: transform var(--transition);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    /* Menu Toggle */
+    .menu-toggle {
+        display: block;
+    }
+
+    /* Header */
+    .header-center {
+        margin: 0 8px;
+        max-width: 100%;
+    }
+    .search-bar {
+        border-radius: var(--radius-sm);
+    }
+    .search-bar input {
+        font-size: 0.85rem;
+        min-width: 60px;
+    }
+    .search-bar .search-type-select {
+        display: none;
+    }
+    .search-bar .search-icon {
+        padding: 0 8px 0 12px;
+    }
+
+    /* Station Grid */
+    .station-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+    }
+
+    /* Player */
+    .player {
+        padding: 10px 14px;
+        gap: 10px;
+        flex-wrap: wrap;
+        height: auto;
+        min-height: var(--player-height);
+    }
+    .player .player-volume input[type="range"] {
+        width: 50px;
+    }
+    .player .player-controls button {
+        font-size: 1.1rem;
+        width: 32px;
+        height: 32px;
+    }
+    .player .player-controls .play-btn {
+        font-size: 1.6rem;
+        width: 40px;
+        height: 40px;
+    }
+    .player .player-art {
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
+    }
+    .player .player-info .station-name {
+        font-size: 0.85rem;
+    }
+    .player .player-progress {
+        order: 10;
+        width: 100%;
+        display: block !important;
+        height: 3px;
+        margin-top: 4px;
+    }
+
+    /* Layout */
+    .app-layout {
+        padding: 0 8px;
+        gap: 8px;
+    }
+    .main-content {
+        padding: 8px 0;
+    }
+    .content-header h2 {
+        font-size: 1.2rem;
+    }
+    .header {
+        padding: 0 12px;
+    }
+    .logo span {
+        display: none;
+    }
+    .logo-version {
+        display: none;
+    }
+
+    /* Body */
+    body {
+        padding-bottom: calc(var(--player-height) + 50px);
+    }
+}
+
+/* Small Mobile (430px) */
+@media (max-width: 430px) {
+    .station-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .station-card {
+        padding: 12px;
+    }
+    .station-card .card-name {
+        font-size: 0.85rem;
+    }
+    .station-card .card-art {
+        font-size: 2.2rem;
+    }
+}
+
+/* Extra Small (360px) */
+@media (max-width: 360px) {
+    .station-grid {
+        grid-template-columns: 1fr;
+    }
+}

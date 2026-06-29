@@ -1,0 +1,241 @@
+/* ============================================================
+   HEADER.CSS - v1.0.0
+   Header, Logo, Search Bar, Suggestions Dropdown
+   ============================================================ */
+
+/* Header */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background var(--transition), border var(--transition);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background: rgba(var(--bg-secondary-rgb, 255, 255, 255), 0.92);
+}
+
+[data-theme="dark"] .header {
+    background: rgba(26, 26, 26, 0.92);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-primary);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition);
+}
+
+.menu-toggle:hover {
+    background: var(--bg-hover);
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--accent);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.logo-version {
+    font-size: 0.6rem;
+    font-weight: 500;
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-left: 4px;
+}
+
+.header-center {
+    flex: 1;
+    max-width: 600px;
+    margin: 0 24px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    transition: background var(--transition), color var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.header-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+/* Search Bar */
+.search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--bg-input);
+    border-radius: var(--radius-full);
+    border: 1px solid transparent;
+    transition: all var(--transition);
+}
+
+.search-bar:focus-within {
+    border-color: var(--accent);
+    background: var(--bg-secondary);
+    box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.search-bar .search-icon {
+    padding: 0 12px 0 16px;
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 10px 12px 10px 0;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    outline: none;
+    min-width: 120px;
+}
+
+.search-bar input::placeholder {
+    color: var(--text-muted);
+}
+
+.search-bar .search-type-select {
+    padding: 8px 12px 8px 4px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    cursor: pointer;
+    outline: none;
+    border-left: 1px solid var(--border);
+    margin-left: 4px;
+}
+
+.search-bar .search-type-select option {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+/* Suggestions Dropdown */
+.suggestions-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-hover);
+    max-height: 320px;
+    overflow-y: auto;
+    display: none;
+    z-index: 60;
+    padding: 8px 0;
+}
+
+.suggestions-dropdown.active {
+    display: block;
+}
+
+.suggestions-dropdown .suggestion-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.15s;
+    border-bottom: 1px solid var(--border);
+}
+
+.suggestions-dropdown .suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestions-dropdown .suggestion-item:hover {
+    background: var(--bg-hover);
+}
+
+.suggestions-dropdown .suggestion-item .suggestion-icon {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+.suggestions-dropdown .suggestion-item .suggestion-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.suggestions-dropdown .suggestion-item .suggestion-name {
+    font-weight: 500;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.suggestions-dropdown .suggestion-item .suggestion-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.suggestions-dropdown .suggestion-item .suggestion-tag {
+    font-size: 0.65rem;
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    flex-shrink: 0;
+}

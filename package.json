@@ -1,0 +1,23 @@
+{
+  "name": "radiotube",
+  "version": "6.5.0",
+  "description": "A radio streaming web app with YouTube Music-style interface",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8000 || npx serve ."
+  },
+  "keywords": [
+    "radio",
+    "streaming",
+    "music",
+    "pwa"
+  ],
+  "author": "RadioStream",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {},
+  "homepage": ""
+}

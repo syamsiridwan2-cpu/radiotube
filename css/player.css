@@ -1,0 +1,199 @@
+/* ============================================================
+   PLAYER.CSS - v1.0.0
+   Player Bar, Controls, Volume, Progress
+   ============================================================ */
+
+/* Player */
+.player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-player);
+    border-top: 1px solid var(--border);
+    padding: 12px 24px;
+    height: var(--player-height);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 200;
+    transition: background var(--transition), border var(--transition), box-shadow var(--transition);
+    box-shadow: var(--shadow-player);
+}
+
+/* Player Playing State */
+.player.playing {
+    border-top-color: var(--accent);
+    box-shadow: 0 -2px 20px rgba(26, 115, 232, 0.3);
+}
+
+/* Player Art */
+.player .player-art {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--accent-light), var(--bg-hover));
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: box-shadow var(--transition);
+}
+
+.player .player-art.playing {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Player Info */
+.player .player-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.player .player-info .station-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player .player-info .station-detail {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Player Controls */
+.player .player-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.player .player-controls button {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 6px 8px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    width: 40px;
+    height: 40px;
+}
+
+.player .player-controls button:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.player .player-controls .play-btn {
+    font-size: 2rem;
+    color: var(--text-primary);
+    width: 48px;
+    height: 48px;
+}
+
+.player .player-controls .play-btn:hover {
+    color: var(--accent);
+    background: var(--accent-light);
+}
+
+/* Player Playlist & Favorite Buttons */
+.player .player-controls .player-playlist-btn,
+.player .player-controls .player-fav-btn {
+    font-size: 1.2rem;
+    width: 36px;
+    height: 36px;
+    color: var(--text-muted);
+    background: var(--bg-hover);
+    border-radius: 50%;
+}
+
+.player .player-controls .player-playlist-btn:hover {
+    color: var(--accent);
+    background: var(--accent-light);
+}
+
+.player .player-controls .player-fav-btn:hover {
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.player .player-controls .player-fav-btn.active {
+    color: #f59e0b;
+}
+
+.player .player-controls .play-btn:active {
+    transform: scale(0.9);
+}
+
+/* Player Volume */
+.player .player-volume {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.player .player-volume input[type="range"] {
+    width: 80px;
+    accent-color: var(--accent);
+    background: var(--bg-input);
+    height: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: width var(--transition);
+}
+
+.player .player-volume .mute-btn {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 4px;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition);
+}
+
+.player .player-volume .mute-btn:hover {
+    background: var(--bg-hover);
+}
+
+/* Player Progress Bar */
+.player .player-progress {
+    flex: 1;
+    min-width: 60px;
+    height: 3px;
+    background: var(--bg-input);
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    display: none;
+}
+
+.player .player-progress .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.1s;
+}
