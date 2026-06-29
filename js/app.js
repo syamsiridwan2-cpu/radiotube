@@ -4,7 +4,7 @@
  * Fixed: favorites (use stationuuid), playlists, playing indicator
  */
 
-const APP_VERSION = '6.7.0';
+const APP_VERSION = '6.8.0';
 console.log('%c RadioStream v' + APP_VERSION, 'font-size:20px; font-weight:bold; color:#1a73e8;');
 
 // ============================================================
@@ -55,6 +55,51 @@ const state = {
 
 function $(id) { return document.getElementById(id); }
 
+var ICON = {
+    home: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+    heart: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    heartFill: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    clock: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+    music: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+    guitar: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2l4 4-7 7-4-4z"/><path d="M2 22l4-4"/><path d="M11 7l-1.5 1.5"/><path d="M15.5 8.5L14 10"/><path d="M7.5 13.5L6 15"/><path d="M10 17l-1.5 1.5"/></svg>',
+    headphone: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>',
+    speaker: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>',
+    radio: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/></svg>',
+    mic: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>',
+    vinyl: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>',
+    play: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>',
+    pause: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>',
+    skipBack: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>',
+    skipForward: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>',
+    share: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
+    clipboard: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>',
+    star: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+    starFill: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+    refresh: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
+    search: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+    menu: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
+    volume: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>',
+    volumeX: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>',
+    sun: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>',
+    moon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+    plus: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+    x: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    chevronUp: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>',
+    chevronDown: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
+    more: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>',
+    list: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
+    rock: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2l4 4-7 7-4-4z"/><path d="M2 22l4-4"/><path d="M11 7l-1.5 1.5"/></svg>',
+    jazz: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+    classical: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+    electronic: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><circle cx="12" cy="14" r="4"/><line x1="12" y1="6" x2="12.01" y2="6"/></svg>',
+    pop: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>',
+    hiphop: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>',
+    arrowUp: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>',
+    arrowDown: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>',
+    edit: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+    trash: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+};
+
 function initDomReferences() {
     state.audio = $('audio');
     state.playerStationName = $('playerStationName');
@@ -81,6 +126,44 @@ function initDomReferences() {
     state.progressFill = $('progressFill');
     state.playerProgress = $('playerProgress');
     state.versionBadge = $('versionBadge');
+}
+
+function setStaticIcons() {
+    var menuToggle = $('menuToggle');
+    if (menuToggle) menuToggle.innerHTML = ICON.menu;
+    var searchIcon = document.querySelector('.search-icon');
+    if (searchIcon) searchIcon.innerHTML = ICON.search;
+    var favsBtn = $('favoritesBtn');
+    if (favsBtn) favsBtn.innerHTML = ICON.heart;
+    var themeTgl = $('themeToggle');
+    if (themeTgl) themeTgl.innerHTML = ICON.sun;
+    var prevBtn = $('prevBtn');
+    if (prevBtn) prevBtn.innerHTML = ICON.skipBack;
+    var nextBtn = $('nextBtn');
+    if (nextBtn) nextBtn.innerHTML = ICON.skipForward;
+    var retryBtn = $('retryBtn');
+    if (retryBtn) retryBtn.innerHTML = ICON.refresh;
+    var muteBtn = $('muteBtn');
+    if (muteBtn) muteBtn.innerHTML = ICON.volume;
+    var moreBtn = $('playerMoreBtn');
+    if (moreBtn) moreBtn.innerHTML = ICON.more;
+    var dropFav = $('toggleFavBtn');
+    if (dropFav) { var di = dropFav.querySelector('.di-icon'); if (di) di.innerHTML = ICON.star; }
+    var dropShare = $('shareStationBtn');
+    if (dropShare) { var di2 = dropShare.querySelector('.di-icon'); if (di2) di2.innerHTML = ICON.share; }
+    var dropAdd = $('addToPlaylistBtn');
+    if (dropAdd) { var di3 = dropAdd.querySelector('.di-icon'); if (di3) di3.innerHTML = ICON.clipboard; }
+    document.querySelectorAll('.sidebar-item[data-view="home"] .item-icon').forEach(function(el) { el.innerHTML = ICON.home; });
+    document.querySelectorAll('.sidebar-item[data-view="favorites"] .item-icon').forEach(function(el) { el.innerHTML = ICON.heart; });
+    document.querySelectorAll('.sidebar-item[data-view="recent"] .item-icon').forEach(function(el) { el.innerHTML = ICON.clock; });
+    document.querySelectorAll('.sidebar-item[data-genre="rock"] .item-icon').forEach(function(el) { el.innerHTML = ICON.rock; });
+    document.querySelectorAll('.sidebar-item[data-genre="jazz"] .item-icon').forEach(function(el) { el.innerHTML = ICON.jazz; });
+    document.querySelectorAll('.sidebar-item[data-genre="classical"] .item-icon').forEach(function(el) { el.innerHTML = ICON.classical; });
+    document.querySelectorAll('.sidebar-item[data-genre="electronic"] .item-icon').forEach(function(el) { el.innerHTML = ICON.electronic; });
+    document.querySelectorAll('.sidebar-item[data-genre="pop"] .item-icon').forEach(function(el) { el.innerHTML = ICON.pop; });
+    document.querySelectorAll('.sidebar-item[data-genre="hiphop"] .item-icon').forEach(function(el) { el.innerHTML = ICON.hiphop; });
+    var createBtn = $('createPlaylistBtn');
+    if (createBtn) { var sp = createBtn.querySelector('span'); if (sp) sp.innerHTML = ICON.plus; }
 }
 
 // ============================================================
@@ -137,7 +220,7 @@ function handleToggleFavorite(uuid) {
     if (favBtn && state.playingStationId === uuid) {
         var isFav = state.favorites.indexOf(uuid) > -1;
         favBtn.classList.toggle('active', isFav);
-        favBtn.textContent = isFav ? '\u2764\uFE0F' : '\u2B50';
+        favBtn.innerHTML = isFav ? ICON.heartFill : ICON.heart;
     }
 
     renderCurrentStations();
@@ -532,7 +615,7 @@ function renderStations(stations) {
         return;
     }
 
-    var emojis = ['🎵','🎶','🎧','📻','🎸','🎷','🎹','🥁','🎺','🎻','🪕','🎤'];
+    var cardIcons = [ICON.music, ICON.headphone, ICON.radio, ICON.speaker, ICON.vinyl, ICON.mic, ICON.music, ICON.headphone, ICON.radio, ICON.speaker, ICON.vinyl, ICON.mic];
     var html = '';
     var isPlaylistView = state.currentView.startsWith('playlist:');
     var currentPlaylistId = isPlaylistView ? state.currentView.split(':')[1] : null;
@@ -545,24 +628,24 @@ function renderStations(stations) {
         var country = st.country || '\u2014';
         var isActive = state.playingStationId === uuid;
         var isPlaying = isActive && state.isPlaying;
-        var emoji = emojis[idx % emojis.length];
+        var cardIcon = cardIcons[idx % cardIcons.length];
 
         var playlistBtns = '';
         if (isPlaylistView) {
             playlistBtns =
-                '<button class="pl-move-btn" data-uuid="' + uuid + '" data-dir="-1" aria-label="Naik" title="Naik">\u2191</button>' +
-                '<button class="pl-move-btn" data-uuid="' + uuid + '" data-dir="1" aria-label="Turun" title="Turun">\u2193</button>' +
-                '<button class="pl-remove-btn" data-uuid="' + uuid + '" aria-label="Hapus dari playlist" title="Hapus">\u2715</button>';
+                '<button class="pl-move-btn" data-uuid="' + uuid + '" data-dir="-1" aria-label="Naik" title="Naik">' + ICON.chevronUp + '</button>' +
+                '<button class="pl-move-btn" data-uuid="' + uuid + '" data-dir="1" aria-label="Turun" title="Turun">' + ICON.chevronDown + '</button>' +
+                '<button class="pl-remove-btn" data-uuid="' + uuid + '" aria-label="Hapus dari playlist" title="Hapus">' + ICON.x + '</button>';
         }
 
         html += '<div class="station-card' + (isActive ? ' active' : '') + '" data-index="' + idx + '" data-uuid="' + uuid + '">' +
-            '<button class="fav-btn' + (isFav ? ' active' : '') + '" data-uuid="' + uuid + '" aria-label="Favorit">' + (isFav ? '\u2764\uFE0F' : '\u2B50') + '</button>' +
-            '<button class="share-btn" data-uuid="' + uuid + '" aria-label="Share" title="Share stasiun ini">\uD83D\uDCE4</button>' +
-            (isPlaylistView ? playlistBtns : '<button class="add-playlist-btn" data-uuid="' + uuid + '" aria-label="Tambah ke Playlist" title="Tambah ke Playlist">📋</button>') +
+            '<button class="fav-btn' + (isFav ? ' active' : '') + '" data-uuid="' + uuid + '" aria-label="Favorit">' + (isFav ? ICON.heartFill : ICON.heart) + '</button>' +
+            '<button class="share-btn" data-uuid="' + uuid + '" aria-label="Share" title="Share stasiun ini">' + ICON.share + '</button>' +
+            (isPlaylistView ? playlistBtns : '<button class="add-playlist-btn" data-uuid="' + uuid + '" aria-label="Tambah ke Playlist" title="Tambah ke Playlist">' + ICON.clipboard + '</button>') +
             '<div class="card-art">' +
-                emoji +
+                '<div class="card-art-icon">' + cardIcon + '</div>' +
                 '<div class="playing-overlay">' +
-                    '<span class="play-icon">' + (isPlaying ? '\u23F8' : '\u25B6') + '</span>' +
+                    '<span class="play-icon">' + (isPlaying ? ICON.pause : ICON.play) + '</span>' +
                 '</div>' +
                 (isPlaying ? '<div class="eq-bars"><span></span><span></span><span></span><span></span></div>' : '') +
                 '<div class="playing-indicator' + (isPlaying ? ' active' : '') + '">Now Playing</div>' +
@@ -697,7 +780,7 @@ function updateNowPlayingBanner() {
     $('npbName').textContent = station.name || 'Stasiun';
     var lang = Array.isArray(station.language) ? station.language.join(', ') : (station.language || '');
     $('npbDetail').textContent = [station.country, lang].filter(Boolean).join(' \u00B7 ') || 'Streaming';
-    $('npbPlayBtn').textContent = state.isPlaying ? '\u23F8' : '\u25B6';
+    $('npbPlayBtn').innerHTML = state.isPlaying ? ICON.pause : ICON.play;
     $('npbEq').style.display = state.isPlaying ? 'flex' : 'none';
 }
 
@@ -779,7 +862,7 @@ function playStationByData(station) {
 
     audio.play().then(function() {
         state.isPlaying = true;
-        state.playBtn.textContent = '\u23F8';
+        state.playBtn.innerHTML = ICON.pause;
         clearPlayerError();
         updatePlayerUI(station);
         updatePlayerVisualState(true);
@@ -787,12 +870,12 @@ function playStationByData(station) {
     }).catch(function(err) {
         if (err.name === 'AbortError') return;
         state.isPlaying = false;
-        state.playBtn.textContent = '\u25B6';
+        state.playBtn.innerHTML = ICON.play;
         audio.oncanplay = function() {
             audio.oncanplay = null;
             audio.play().then(function() {
                 state.isPlaying = true;
-                state.playBtn.textContent = '\u23F8';
+                state.playBtn.innerHTML = ICON.pause;
                 clearPlayerError();
                 updatePlayerUI(station);
                 updatePlayerVisualState(true);
@@ -846,21 +929,21 @@ function updatePlayerUI(station) {
         var lang = Array.isArray(station.language) ? station.language.join(', ') : (station.language || '');
         var detail = [station.country, lang].filter(Boolean).join(' \u2022 ');
         state.playerStationDetail.textContent = detail || 'Streaming';
-        state.playBtn.textContent = '\u23F8';
-        state.playerArt.textContent = '\uD83D\uDCFB';
+        state.playBtn.innerHTML = ICON.pause;
+        state.playerArt.innerHTML = ICON.radio;
 
         if (favBtn) {
             var uuid = stationUuid(station);
             var isFav = state.favorites.indexOf(uuid) > -1;
             favBtn.classList.toggle('active', isFav);
-            favBtn.textContent = isFav ? '\u2764\uFE0F' : '\u2B50';
+        favBtn.innerHTML = isFav ? ICON.heartFill : ICON.heart;
         }
     } else {
         state.playerStationName.textContent = 'Tidak ada yang diputar';
         state.playerStationDetail.textContent = 'Pilih stasiun untuk mulai mendengarkan';
-        state.playBtn.textContent = '\u25B6';
-        state.playerArt.textContent = '\uD83D\uDCFB';
-        if (favBtn) { favBtn.classList.remove('active'); favBtn.textContent = '\u2B50'; }
+        state.playBtn.innerHTML = ICON.play;
+        state.playerArt.innerHTML = ICON.radio;
+        if (favBtn) { favBtn.classList.remove('active'); favBtn.innerHTML = ICON.heart; }
     }
 }
 
@@ -884,13 +967,13 @@ function setupVolume() {
 
     slider.addEventListener('input', function() {
         audio.volume = parseFloat(slider.value);
-        if (audio.volume > 0) { muted = false; muteBtn.textContent = '\uD83D\uDD0A'; }
+        if (audio.volume > 0) { muted = false; muteBtn.innerHTML = ICON.volume; }
     });
 
     muteBtn.addEventListener('click', function() {
         muted = !muted;
-        if (muted) { audio.volume = 0; slider.value = '0'; muteBtn.textContent = '\uD83D\uDD07'; }
-        else { audio.volume = 0.8; slider.value = '0.8'; muteBtn.textContent = '\uD83D\uDD0A'; }
+        if (muted) { audio.volume = 0; slider.value = '0'; muteBtn.innerHTML = ICON.volumeX; }
+        else { audio.volume = 0.8; slider.value = '0.8'; muteBtn.innerHTML = ICON.volume; }
     });
 }
 
@@ -1154,12 +1237,12 @@ function handleStationDeepLink() {
             if (!st) return;
             var banner = $('nowPlayingBanner');
             if (banner) {
-                $('npbArt').textContent = '\uD83D\uDCFB';
+                $('npbArt').innerHTML = ICON.radio;
                 $('npbName').textContent = st.name || 'Stasiun';
                 var lang = Array.isArray(st.language) ? st.language.join(', ') : (st.language || '');
                 $('npbDetail').textContent = 'Klik play untuk mendengarkan';
                 $('npbEq').style.display = 'none';
-                $('npbPlayBtn').textContent = '\u25B6';
+                $('npbPlayBtn').innerHTML = ICON.play;
                 banner.classList.add('visible');
             }
             state.playingStationData = st;
@@ -1174,6 +1257,7 @@ function handleStationDeepLink() {
 // ============================================================
 function init() {
     initDomReferences();
+    setStaticIcons();
     loadTheme();
     loadFavorites();
     loadRecentlyPlayed();
@@ -1283,21 +1367,21 @@ function init() {
 
     state.audio.addEventListener('play', function() {
         state.isPlaying = true;
-        state.playBtn.textContent = '\u23F8';
+        state.playBtn.innerHTML = ICON.pause;
         updatePlayerVisualState(true);
         renderStations(state.stations);
     });
 
     state.audio.addEventListener('pause', function() {
         state.isPlaying = false;
-        state.playBtn.textContent = '\u25B6';
+        state.playBtn.innerHTML = ICON.play;
         updatePlayerVisualState(false);
         renderStations(state.stations);
     });
 
     state.audio.addEventListener('ended', function() {
         state.isPlaying = false;
-        state.playBtn.textContent = '\u25B6';
+        state.playBtn.innerHTML = ICON.play;
         updatePlayerVisualState(false);
         renderStations(state.stations);
     });
@@ -1307,7 +1391,7 @@ function init() {
         var msg = 'Gagal memutar stream. Coba stasiun lain.';
         showPlayerError(msg);
         state.isPlaying = false;
-        state.playBtn.textContent = '\u25B6';
+        state.playBtn.innerHTML = ICON.play;
         updatePlayerVisualState(false);
         showToast(msg);
         renderStations(state.stations);

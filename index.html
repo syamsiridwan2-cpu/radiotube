@@ -16,12 +16,12 @@
     <link rel="apple-touch-icon" href="icons/icon-192.svg" />
 
     <!-- CSS - cache busted -->
-    <link rel="stylesheet" href="css/variables.css?v=9" />
-    <link rel="stylesheet" href="css/base.css?v=9" />
-    <link rel="stylesheet" href="css/header.css?v=9" />
+    <link rel="stylesheet" href="css/variables.css?v=10" />
+    <link rel="stylesheet" href="css/base.css?v=10" />
+    <link rel="stylesheet" href="css/header.css?v=10" />
     <link rel="stylesheet" href="css/sidebar.css?v=9" />
-    <link rel="stylesheet" href="css/content.css?v=9" />
-    <link rel="stylesheet" href="css/player.css?v=10" />
+    <link rel="stylesheet" href="css/content.css?v=10" />
+    <link rel="stylesheet" href="css/player.css?v=11" />
     <link rel="stylesheet" href="css/animations.css?v=9" />
     <link rel="stylesheet" href="css/responsive.css?v=9" />
 
@@ -244,7 +244,7 @@
 </head>
 <body>
 
-    <div class="version-badge" id="versionBadge">v6.7.0</div>
+    <div class="version-badge" id="versionBadge">v6.8.0</div>
 
     <!-- Header -->
     <header class="header">
@@ -253,7 +253,7 @@
             <a href="#" class="logo" id="logoLink">
                 <span class="logo-icon">📻</span>
                 <span>RadioStream</span>
-                <span class="logo-version">v6.7</span>
+                <span class="logo-version">v6.8</span>
             </a>
         </div>
         <div class="header-center">
@@ -361,9 +361,9 @@
         <div class="player-more-wrap">
             <button id="playerMoreBtn" class="player-more-btn" aria-label="More" title="Opsi lain">⋮</button>
             <div class="player-more-dropdown" id="playerMoreDropdown">
-                <button id="addToPlaylistBtn" class="dropdown-item" aria-label="Tambah ke Playlist">📋 Tambah ke Playlist</button>
-                <button id="toggleFavBtn" class="dropdown-item" aria-label="Favorit">⭐ Favorit</button>
-                <button id="shareStationBtn" class="dropdown-item" aria-label="Share">📤 Share</button>
+                <button id="addToPlaylistBtn" class="dropdown-item" aria-label="Tambah ke Playlist"><span class="di-icon">📋</span><span class="di-label">Tambah ke Playlist</span></button>
+                <button id="toggleFavBtn" class="dropdown-item" aria-label="Favorit"><span class="di-icon">⭐</span><span class="di-label">Favorit</span></button>
+                <button id="shareStationBtn" class="dropdown-item" aria-label="Share"><span class="di-icon">📤</span><span class="di-label">Share</span></button>
             </div>
         </div>
     </div>
@@ -392,7 +392,7 @@
     <!-- CACHE CLEAR ON VERSION CHANGE + REGISTER SW -->
     <script>
         (async function bootstrap() {
-            const currentVersion = '6.7.0';
+            const currentVersion = '6.8.0';
             const savedVersion = localStorage.getItem('radio_version');
 
             if (savedVersion !== currentVersion) {
@@ -412,6 +412,6 @@
             }
         })();
     </script>
-    <script src="js/app.js?v=15"></script>
+    <script src="js/app.js?v=16"></script>
 </body>
 </html>
