@@ -873,6 +873,7 @@ function playStationByData(station) {
         clearPlayerError();
         updatePlayerUI(station);
         updatePlayerVisualState(true);
+        updateMediaSession(station);
         renderStations(state.stations);
     }).catch(function(err) {
         if (err.name === 'AbortError') return;
@@ -886,6 +887,7 @@ function playStationByData(station) {
                 clearPlayerError();
                 updatePlayerUI(station);
                 updatePlayerVisualState(true);
+                updateMediaSession(station);
                 renderStations(state.stations);
             }).catch(function(err2) {
                 if (err2.name === 'AbortError') return;
@@ -964,6 +966,46 @@ function updatePlayerVisualState(isPlaying) {
     var playerArt = $('playerArt');
     if (player) player.classList.toggle('playing', isPlaying);
     if (playerArt) playerArt.classList.toggle('playing', isPlaying);
+}
+
+// ============================================================
+//  MEDIA SESSION API
+// ============================================================
+function updateMediaSession(station) {
+    if (!('mediaSession' in navigator)) return;
+    if (!station) {
+        navigator.mediaSession.metadata = null;
+        return;
+    }
+    var artwork = [];
+    try {
+        var icon192 = document.querySelector('link[rel="icon"][sizes="192x192"]');
+        if (icon192) artwork.push({ src: icon192.href, sizes: '192x192', type: 'image/svg+xml' });
+    } catch (e) {}
+    navigator.mediaSession.metadata = new MediaMetadata({
+        title: station.name || 'RadioStream',
+        artist: station.country || '',
+        album: station.tags || '',
+        artwork: artwork
+    });
+}
+
+function setupMediaSession() {
+    if (!('mediaSession' in navigator)) return;
+    navigator.mediaSession.setActionHandler('play', function() {
+        if (state.playingStationData) {
+            state.audio.play().catch(function() {});
+        }
+    });
+    navigator.mediaSession.setActionHandler('pause', function() {
+        state.audio.pause();
+    });
+    navigator.mediaSession.setActionHandler('nexttrack', function() {
+        playNext();
+    });
+    navigator.mediaSession.setActionHandler('previoustrack', function() {
+        playPrev();
+    });
 }
 
 // ============================================================
@@ -1280,6 +1322,7 @@ function init() {
     renderPlaylistSidebar();
     renderRecentlyPlayedBadge();
     setupVolume();
+    setupMediaSession();
     setupSidebar();
     setupKeyboard();
 
@@ -1375,6 +1418,7 @@ function init() {
         state.isPlaying = true;
         state.playBtn.innerHTML = ICON.pause;
         updatePlayerVisualState(true);
+        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
         renderStations(state.stations);
     });
 
@@ -1382,6 +1426,7 @@ function init() {
         state.isPlaying = false;
         state.playBtn.innerHTML = ICON.play;
         updatePlayerVisualState(false);
+        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
         renderStations(state.stations);
     });
 
@@ -1389,6 +1434,7 @@ function init() {
         state.isPlaying = false;
         state.playBtn.innerHTML = ICON.play;
         updatePlayerVisualState(false);
+        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'none';
         renderStations(state.stations);
     });
 
@@ -1399,6 +1445,7 @@ function init() {
         state.isPlaying = false;
         state.playBtn.innerHTML = ICON.play;
         updatePlayerVisualState(false);
+        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'none';
         showToast(msg);
         renderStations(state.stations);
     });
