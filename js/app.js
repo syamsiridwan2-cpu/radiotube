@@ -4,7 +4,7 @@
  * Fixed: favorites (use stationuuid), playlists, playing indicator
  */
 
-const APP_VERSION = '6.9.0';
+const APP_VERSION = '6.10.0';
 console.log('%c RadioStream v' + APP_VERSION, 'font-size:20px; font-weight:bold; color:#1a73e8;');
 
 // ============================================================

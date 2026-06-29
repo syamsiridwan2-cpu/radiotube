@@ -16,14 +16,14 @@
     <link rel="apple-touch-icon" href="icons/icon-192.svg" />
 
     <!-- CSS - cache busted -->
-    <link rel="stylesheet" href="css/variables.css?v=10" />
-    <link rel="stylesheet" href="css/base.css?v=10" />
-    <link rel="stylesheet" href="css/header.css?v=10" />
-    <link rel="stylesheet" href="css/sidebar.css?v=9" />
-    <link rel="stylesheet" href="css/content.css?v=10" />
+    <link rel="stylesheet" href="css/variables.css?v=11" />
+    <link rel="stylesheet" href="css/base.css?v=11" />
+    <link rel="stylesheet" href="css/header.css?v=11" />
+    <link rel="stylesheet" href="css/sidebar.css?v=11" />
+    <link rel="stylesheet" href="css/content.css?v=11" />
     <link rel="stylesheet" href="css/player.css?v=11" />
-    <link rel="stylesheet" href="css/animations.css?v=9" />
-    <link rel="stylesheet" href="css/responsive.css?v=9" />
+    <link rel="stylesheet" href="css/animations.css?v=11" />
+    <link rel="stylesheet" href="css/responsive.css?v=11" />
 
     <!-- FORCE OVERRIDE: inline critical styles to defeat cached CSS -->
     <style id="criticalFix">
@@ -291,7 +291,7 @@
 </head>
 <body>
 
-    <div class="version-badge" id="versionBadge">v6.9.0</div>
+    <div class="version-badge" id="versionBadge">v6.10.0</div>
 
     <!-- Header -->
     <header class="header">
@@ -504,7 +504,7 @@
     <!-- CACHE CLEAR ON VERSION CHANGE + REGISTER SW -->
     <script>
         (async function bootstrap() {
-            const currentVersion = '6.9.0';
+            const currentVersion = '6.10.0';
             const savedVersion = localStorage.getItem('radio_version');
 
             if (savedVersion !== currentVersion) {
@@ -524,6 +524,6 @@
             }
         })();
     </script>
-    <script src="js/app.js?v=17"></script>
+    <script src="js/app.js?v=18"></script>
 </body>
 </html>
