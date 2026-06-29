@@ -1,6 +1,6 @@
 {
   "name": "radiotube",
-  "version": "6.5.0",
+  "version": "6.6.0",
   "description": "A radio streaming web app with YouTube Music-style interface",
   "main": "index.html",
   "scripts": {

@@ -4,7 +4,7 @@
  * Fixed: favorites (use stationuuid), playlists, playing indicator
  */
 
-const APP_VERSION = '6.5.0';
+const APP_VERSION = '6.6.0';
 console.log('%c RadioStream v' + APP_VERSION, 'font-size:20px; font-weight:bold; color:#1a73e8;');
 
 // ============================================================
@@ -557,6 +557,7 @@ function renderStations(stations) {
 
         html += '<div class="station-card' + (isActive ? ' active' : '') + '" data-index="' + idx + '" data-uuid="' + uuid + '">' +
             '<button class="fav-btn' + (isFav ? ' active' : '') + '" data-uuid="' + uuid + '" aria-label="Favorit">' + (isFav ? '\u2764\uFE0F' : '\u2B50') + '</button>' +
+            '<button class="share-btn" data-uuid="' + uuid + '" aria-label="Share" title="Share stasiun ini">\uD83D\uDCE4</button>' +
             (isPlaylistView ? playlistBtns : '<button class="add-playlist-btn" data-uuid="' + uuid + '" aria-label="Tambah ke Playlist" title="Tambah ke Playlist">📋</button>') +
             '<div class="card-art">' +
                 emoji +
@@ -614,6 +615,14 @@ function renderStations(stations) {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
             if (currentPlaylistId) moveStationInPlaylist(currentPlaylistId, btn.dataset.uuid, parseInt(btn.dataset.dir));
+        });
+    });
+
+    grid.querySelectorAll('.share-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var station = stations.find(function(s) { return stationUuid(s) === btn.dataset.uuid; });
+            if (station) shareStation(station);
         });
     });
 
@@ -1088,6 +1097,57 @@ function setupKeyboard() {
 }
 
 // ============================================================
+//  SHARE STATION
+// ============================================================
+function shareStation(station) {
+    var name = station.name || 'Radio Station';
+    var url = station.urlResolved || station.url;
+    var shareUrl = 'https://syamsiridwan2-cpu.github.io/radiotube/?station=' + encodeURIComponent(stationUuid(station));
+    var shareData = {
+        title: name,
+        text: 'Dengarkan ' + name + ' di RadioStream!',
+        url: shareUrl
+    };
+
+    if (navigator.share) {
+        navigator.share(shareData).catch(function(err) {
+            if (err.name !== 'AbortError') copyShareLink(shareUrl, name);
+        });
+    } else {
+        copyShareLink(shareUrl, name);
+    }
+}
+
+function copyShareLink(url, name) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function() {
+            showToast('Link disalin: ' + name, 'success');
+        });
+    } else {
+        var ta = document.createElement('textarea');
+        ta.value = url;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('Link disalin: ' + name, 'success');
+    }
+}
+
+function handleStationDeepLink() {
+    var params = new URLSearchParams(window.location.search);
+    var stationId = params.get('station');
+    if (stationId) {
+        setTimeout(function() {
+            apiFetchStationByUuid(stationId).then(function(st) {
+                if (st) playStationByData(st);
+            });
+            window.history.replaceState({}, '', window.location.pathname);
+        }, 1500);
+    }
+}
+
+// ============================================================
 //  INIT
 // ============================================================
 function init() {
@@ -1165,6 +1225,11 @@ function init() {
         else showToast('Pilih stasiun terlebih dahulu');
     });
 
+    $('shareStationBtn').addEventListener('click', function() {
+        if (state.playingStationData) shareStation(state.playingStationData);
+        else showToast('Pilih stasiun terlebih dahulu');
+    });
+
     state.themeToggle.addEventListener('click', toggleTheme);
 
     document.addEventListener('click', function(e) {
@@ -1218,6 +1283,7 @@ function init() {
     });
 
     updateNowPlayingBanner();
+    handleStationDeepLink();
     console.log('RadioStream v' + APP_VERSION + ' siap!');
 }
 

@@ -193,11 +193,35 @@
     color: #f59e0b;
 }
 
+.station-card .share-btn {
+    position: absolute;
+    top: 20px;
+    right: 50px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-muted);
+    z-index: 2;
+    box-shadow: var(--shadow);
+}
+
+.station-card .share-btn:hover {
+    transform: scale(1.1);
+}
+
 /* Add to Playlist Button */
 .station-card .add-playlist-btn {
     position: absolute;
     top: 20px;
-    right: 50px;
+    right: 84px;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 50%;

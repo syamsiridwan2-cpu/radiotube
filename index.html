@@ -244,7 +244,7 @@
 </head>
 <body>
 
-    <div class="version-badge" id="versionBadge">v6.5.0</div>
+    <div class="version-badge" id="versionBadge">v6.6.0</div>
 
     <!-- Header -->
     <header class="header">
@@ -253,7 +253,7 @@
             <a href="#" class="logo" id="logoLink">
                 <span class="logo-icon">📻</span>
                 <span>RadioStream</span>
-                <span class="logo-version">v6.5</span>
+                <span class="logo-version">v6.6</span>
             </a>
         </div>
         <div class="header-center">
@@ -352,6 +352,7 @@
             <button id="nextBtn" aria-label="Berikutnya">⏭</button>
             <button id="addToPlaylistBtn" class="player-extra-btn" aria-label="Tambah ke Playlist" title="Tambah ke Playlist">📋</button>
             <button id="toggleFavBtn" class="player-extra-btn" aria-label="Favorit" title="Favorit">⭐</button>
+            <button id="shareStationBtn" class="player-extra-btn" aria-label="Share" title="Share stasiun ini">📤</button>
         </div>
         <div class="player-progress" id="playerProgress">
             <div class="progress-fill" id="progressFill"></div>
@@ -386,7 +387,7 @@
     <!-- CACHE CLEAR ON VERSION CHANGE + REGISTER SW -->
     <script>
         (async function bootstrap() {
-            const currentVersion = '6.5.0';
+            const currentVersion = '6.6.0';
             const savedVersion = localStorage.getItem('radio_version');
 
             if (savedVersion !== currentVersion) {
@@ -406,6 +407,6 @@
             }
         })();
     </script>
-    <script src="js/app.js?v=11"></script>
+    <script src="js/app.js?v=12"></script>
 </body>
 </html>

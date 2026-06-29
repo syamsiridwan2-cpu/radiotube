@@ -136,6 +136,27 @@
     color: #f59e0b;
 }
 
+.player .player-extra-btn {
+    font-size: 1.2rem;
+    width: 36px;
+    height: 36px;
+    color: var(--text-muted);
+    background: var(--bg-hover);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.player .player-extra-btn:hover {
+    color: var(--accent);
+    background: var(--accent-light);
+}
+
+.player .player-extra-btn.active {
+    color: #f59e0b;
+}
+
 .player .player-controls .play-btn:active {
     transform: scale(0.9);
 }
