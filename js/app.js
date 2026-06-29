@@ -777,24 +777,35 @@ function playStationByData(station) {
     audio.src = streamUrl;
     audio.load();
 
-    setTimeout(function() {
-        audio.play().then(function() {
-            state.isPlaying = true;
-            state.playBtn.textContent = '\u23F8';
-            clearPlayerError();
-            updatePlayerUI(station);
-            updatePlayerVisualState(true);
-            renderStations(state.stations);
-        }).catch(function(err) {
-            if (err.name === 'AbortError') return;
-            var msg = getPlayErrorMessage(err);
-            showPlayerError(msg);
-            state.isPlaying = false;
-            state.playBtn.textContent = '\u25B6';
-            showToast(msg);
-            renderStations(state.stations);
-        });
-    }, 100);
+    audio.play().then(function() {
+        state.isPlaying = true;
+        state.playBtn.textContent = '\u23F8';
+        clearPlayerError();
+        updatePlayerUI(station);
+        updatePlayerVisualState(true);
+        renderStations(state.stations);
+    }).catch(function(err) {
+        if (err.name === 'AbortError') return;
+        state.isPlaying = false;
+        state.playBtn.textContent = '\u25B6';
+        audio.oncanplay = function() {
+            audio.oncanplay = null;
+            audio.play().then(function() {
+                state.isPlaying = true;
+                state.playBtn.textContent = '\u23F8';
+                clearPlayerError();
+                updatePlayerUI(station);
+                updatePlayerVisualState(true);
+                renderStations(state.stations);
+            }).catch(function(err2) {
+                if (err2.name === 'AbortError') return;
+                var msg = getPlayErrorMessage(err2);
+                showPlayerError(msg);
+                showToast(msg);
+                renderStations(state.stations);
+            });
+        };
+    });
 
     addToRecentlyPlayed(station);
     apiReportClick(stationUuid(station));
