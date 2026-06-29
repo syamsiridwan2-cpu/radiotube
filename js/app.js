@@ -1327,7 +1327,6 @@ function setupMediaSession() {
 //  BACKGROUND PLAYBACK
 // ============================================================
 function setupBackgroundPlayback() {
-    // resume playback if audio was interrupted while in background
     document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'visible' && state.playingStationData && !state.isPlaying) {
             if (state.audio.src && state.audio.src !== '') {
@@ -1335,24 +1334,6 @@ function setupBackgroundPlayback() {
             }
         }
     });
-
-    // keep audio context alive on browsers that suspend it in background
-    try {
-        var AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return;
-        var ctx = new AudioCtx();
-        // connect audio element to the context
-        var src = ctx.createMediaElementSource ? ctx.createMediaElementSource(state.audio) : null;
-        if (src) src.connect(ctx.destination);
-        // resume context if suspended when page becomes visible
-        document.addEventListener('visibilitychange', function() {
-            if (document.visibilityState === 'visible' && ctx.state === 'suspended') {
-                ctx.resume().catch(function() {});
-            }
-        });
-    } catch (e) {
-        // AudioContext not supported or already in use
-    }
 }
 
 // ============================================================
