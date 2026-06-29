@@ -180,6 +180,15 @@ function stationUuid(st) {
     return st.stationuuid || st.id;
 }
 
+function updateToggleFavIcon(uuid) {
+    var favBtn = $('toggleFavBtn');
+    if (!favBtn || (uuid && state.playingStationId !== uuid)) return;
+    var isFav = state.favorites.indexOf(state.playingStationId) > -1;
+    favBtn.classList.toggle('active', isFav);
+    var di = favBtn.querySelector('.di-icon');
+    if (di) di.innerHTML = isFav ? ICON.heartFill : ICON.heart;
+}
+
 // ============================================================
 //  TOAST
 // ============================================================
@@ -216,12 +225,7 @@ function handleToggleFavorite(uuid) {
     state.favCount.textContent = state.favorites.length;
     console.log('[fav] saved:', state.favorites);
 
-    var favBtn = $('toggleFavBtn');
-    if (favBtn && state.playingStationId === uuid) {
-        var isFav = state.favorites.indexOf(uuid) > -1;
-        favBtn.classList.toggle('active', isFav);
-        favBtn.innerHTML = isFav ? ICON.heartFill : ICON.heart;
-    }
+    updateToggleFavIcon(uuid);
 
     renderCurrentStations();
 }
@@ -852,6 +856,7 @@ function playStationByData(station) {
     state.currentIndex = idx >= 0 ? idx : 0;
 
     var audio = state.audio;
+    audio.oncanplay = null;
     audio.pause();
     audio.currentTime = 0;
 
@@ -938,14 +943,19 @@ function updatePlayerUI(station) {
             var uuid = stationUuid(station);
             var isFav = state.favorites.indexOf(uuid) > -1;
             favBtn.classList.toggle('active', isFav);
-        favBtn.innerHTML = isFav ? ICON.heartFill : ICON.heart;
+            var di = favBtn.querySelector('.di-icon');
+            if (di) di.innerHTML = isFav ? ICON.heartFill : ICON.heart;
         }
     } else {
         state.playerStationName.textContent = 'Tidak ada yang diputar';
         state.playerStationDetail.textContent = 'Pilih stasiun untuk mulai mendengarkan';
         state.playBtn.innerHTML = ICON.play;
         state.playerArt.innerHTML = ICON.radio;
-        if (favBtn) { favBtn.classList.remove('active'); favBtn.innerHTML = ICON.heart; }
+        if (favBtn) {
+            favBtn.classList.remove('active');
+            var di = favBtn.querySelector('.di-icon');
+            if (di) di.innerHTML = ICON.heart;
+        }
     }
 }
 
@@ -965,17 +975,18 @@ function setupVolume() {
     var muteBtn = state.muteBtn;
 
     audio.volume = parseFloat(slider.value);
+    var prevVolume = parseFloat(slider.value);
     var muted = false;
 
     slider.addEventListener('input', function() {
         audio.volume = parseFloat(slider.value);
-        if (audio.volume > 0) { muted = false; muteBtn.innerHTML = ICON.volume; }
+        if (audio.volume > 0) { muted = false; muteBtn.innerHTML = ICON.volume; prevVolume = audio.volume; }
     });
 
     muteBtn.addEventListener('click', function() {
         muted = !muted;
-        if (muted) { audio.volume = 0; slider.value = '0'; muteBtn.innerHTML = ICON.volumeX; }
-        else { audio.volume = 0.8; slider.value = '0.8'; muteBtn.innerHTML = ICON.volume; }
+        if (muted) { prevVolume = audio.volume; audio.volume = 0; slider.value = '0'; muteBtn.innerHTML = ICON.volumeX; }
+        else { audio.volume = prevVolume; slider.value = String(prevVolume); muteBtn.innerHTML = ICON.volume; }
     });
 }
 
@@ -1249,6 +1260,8 @@ function handleStationDeepLink() {
             }
             state.playingStationData = st;
             state.playingStationId = stationUuid(st);
+            state.stations = [st];
+            state.currentIndex = 0;
             showToast('Klik \u25B6 untuk memutar ' + (st.name || 'stasiun'));
         });
     }
@@ -1299,7 +1312,7 @@ function init() {
         }, 400);
     });
 
-    state.searchType.addEventListener('click', function() {
+    state.searchType.addEventListener('change', function() {
         state.currentView = 'home';
         state.currentGenre = null;
         loadStations(true);
@@ -1343,15 +1356,6 @@ function init() {
     $('playerMoreBtn').addEventListener('click', function(e) {
         e.stopPropagation();
         $('playerMoreDropdown').classList.toggle('open');
-    });
-
-    $('addToPlaylistBtn').addEventListener('click', function() {
-        $('playerMoreDropdown').classList.remove('open');
-        if (state.playingStationId) {
-            var station = state.stations.find(function(s) { return stationUuid(s) === state.playingStationId; });
-            if (station) handleAddToPlaylist(station);
-            else showToast('Pilih stasiun terlebih dahulu');
-        } else showToast('Pilih stasiun terlebih dahulu');
     });
 
     state.themeToggle.addEventListener('click', toggleTheme);
