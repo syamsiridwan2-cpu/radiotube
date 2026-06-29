@@ -1149,12 +1149,23 @@ function handleStationDeepLink() {
     var params = new URLSearchParams(window.location.search);
     var stationId = params.get('station');
     if (stationId) {
-        setTimeout(function() {
-            apiFetchStationByUuid(stationId).then(function(st) {
-                if (st) playStationByData(st);
-            });
-            window.history.replaceState({}, '', window.location.pathname);
-        }, 1500);
+        window.history.replaceState({}, '', window.location.pathname);
+        apiFetchStationByUuid(stationId).then(function(st) {
+            if (!st) return;
+            var banner = $('nowPlayingBanner');
+            if (banner) {
+                $('npbArt').textContent = '\uD83D\uDCFB';
+                $('npbName').textContent = st.name || 'Stasiun';
+                var lang = Array.isArray(st.language) ? st.language.join(', ') : (st.language || '');
+                $('npbDetail').textContent = 'Klik play untuk mendengarkan';
+                $('npbEq').style.display = 'none';
+                $('npbPlayBtn').textContent = '\u25B6';
+                banner.classList.add('visible');
+            }
+            state.playingStationData = st;
+            state.playingStationId = stationUuid(st);
+            showToast('Klik \u25B6 untuk memutar ' + (st.name || 'stasiun'));
+        });
     }
 }
 
@@ -1285,7 +1296,13 @@ function init() {
     var npbPlayBtn = $('npbPlayBtn');
     if (npbPlayBtn) {
         npbPlayBtn.addEventListener('click', function() {
-            togglePlay();
+            if (state.playingStationData && state.audio.src && !state.isPlaying) {
+                state.audio.play().catch(function() {});
+            } else if (state.playingStationData && (!state.audio.src || state.audio.src === '')) {
+                playStationByData(state.playingStationData);
+            } else {
+                togglePlay();
+            }
         });
     }
 
