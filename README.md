@@ -1,35 +1,47 @@
 # RadioStream
 
-A radio streaming web app with YouTube Music-style interface.
+A radio streaming web app with modern dark theme interface.
 
-![Version](https://img.shields.io/badge/version-3.0.0-blue)
+![Version](https://img.shields.io/badge/version-6.9.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-## Screenshot
+## Screenshots
 
-![Screenshot](placeholder.png)
+### Main View
+![Main View](screenshots/main-view.png)
 
-> TODO: Add your screenshot here
+### Search
+![Search](screenshots/search.png)
+
+### Playlist Modal
+![Playlist](screenshots/playlist-modal.png)
 
 ## Features
 
 - 30,000+ radio stations from radio-browser.info
 - Dark/Light theme toggle
-- Search by name, country, or genre
+- Search by name, country, or genre with instant suggestions
 - Favorites with localStorage
+- Custom playlists (create, rename, reorder, remove stations)
+- Recently played stations (last 20)
+- Share stations via Web Share API / copy link
+- Deep link sharing (`?station={uuid}`)
+- Now Playing banner on home view
 - Sidebar navigation with genre filters
 - Active card highlight with equalizer animation
-- Ripple click effect on station cards
-- Loading skeleton placeholder
-- Player glow effect when playing
+- Skeleton loading placeholders
+- Player with play/pause, skip, volume, mute
+- Three-dot menu for extra actions
+- Error handling with retry
+- PWA support (installable)
+- Responsive design (mobile → desktop)
 - Keyboard shortcuts
-- PWA support (offline)
 
 ## Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/radiotube.git
+git clone https://github.com/syamsiridwan2-cpu/radiotube.git
 cd radiotube
 ```
 
@@ -42,13 +54,18 @@ python -m http.server 8000
 npx serve .
 ```
 
+## Live Demo
+
+https://syamsiridwan2-cpu.github.io/radiotube/
+
 ## Usage
 
 1. Click a station to start playing
 2. Use the search bar to find stations by name, country, or genre
-3. Click the star icon to add stations to favorites
-4. Toggle dark/light mode with the theme button
-5. Use sidebar to browse by genre
+3. Click the heart icon to add stations to favorites
+4. Create playlists and add stations to them
+5. Share stations using the share button (📤)
+6. Toggle dark/light mode with the theme button
 
 ## Keyboard Shortcuts
 
@@ -75,16 +92,11 @@ radiotube/
 │   ├── animations.css      # Animations & effects
 │   └── responsive.css      # Media queries
 ├── js/
-│   ├── app.js              # Main entry & state
-│   ├── api.js              # API calls
-│   ├── player.js           # Audio player
-│   ├── ui.js               # UI rendering
-│   ├── favorites.js        # Favorites logic
-│   ├── theme.js            # Theme toggle
-│   └── keyboard.js         # Keyboard shortcuts
+│   └── app.js              # Main application (all logic)
 ├── icons/
 │   ├── icon-192.svg        # PWA icon
 │   └── icon-512.svg        # PWA icon
+├── screenshots/            # App screenshots
 ├── manifest.json           # PWA manifest
 ├── sw.js                   # Service worker
 ├── README.md               # This file
@@ -111,4 +123,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - [radio-browser.info](https://www.radio-browser.info/) - Free radio station database
-- YouTube Music - UI inspiration
