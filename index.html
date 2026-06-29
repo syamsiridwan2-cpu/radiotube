@@ -16,14 +16,14 @@
     <link rel="apple-touch-icon" href="icons/icon-192.svg" />
 
     <!-- CSS - cache busted -->
-    <link rel="stylesheet" href="css/variables.css?v=7" />
-    <link rel="stylesheet" href="css/base.css?v=7" />
-    <link rel="stylesheet" href="css/header.css?v=7" />
-    <link rel="stylesheet" href="css/sidebar.css?v=7" />
-    <link rel="stylesheet" href="css/content.css?v=8" />
-    <link rel="stylesheet" href="css/player.css?v=8" />
-    <link rel="stylesheet" href="css/animations.css?v=7" />
-    <link rel="stylesheet" href="css/responsive.css?v=7" />
+    <link rel="stylesheet" href="css/variables.css?v=9" />
+    <link rel="stylesheet" href="css/base.css?v=9" />
+    <link rel="stylesheet" href="css/header.css?v=9" />
+    <link rel="stylesheet" href="css/sidebar.css?v=9" />
+    <link rel="stylesheet" href="css/content.css?v=9" />
+    <link rel="stylesheet" href="css/player.css?v=9" />
+    <link rel="stylesheet" href="css/animations.css?v=9" />
+    <link rel="stylesheet" href="css/responsive.css?v=9" />
 
     <!-- FORCE OVERRIDE: inline critical styles to defeat cached CSS -->
     <style id="criticalFix">
@@ -244,7 +244,7 @@
 </head>
 <body>
 
-    <div class="version-badge" id="versionBadge">v6.6.2</div>
+    <div class="version-badge" id="versionBadge">v6.6.3</div>
 
     <!-- Header -->
     <header class="header">
@@ -253,7 +253,7 @@
             <a href="#" class="logo" id="logoLink">
                 <span class="logo-icon">📻</span>
                 <span>RadioStream</span>
-                <span class="logo-version">v6.6.1</span>
+                <span class="logo-version">v6.6.3</span>
             </a>
         </div>
         <div class="header-center">
@@ -387,7 +387,7 @@
     <!-- CACHE CLEAR ON VERSION CHANGE + REGISTER SW -->
     <script>
         (async function bootstrap() {
-            const currentVersion = '6.6.2';
+            const currentVersion = '6.6.3';
             const savedVersion = localStorage.getItem('radio_version');
 
             if (savedVersion !== currentVersion) {
@@ -407,6 +407,6 @@
             }
         })();
     </script>
-    <script src="js/app.js?v=13"></script>
+    <script src="js/app.js?v=14"></script>
 </body>
 </html>
