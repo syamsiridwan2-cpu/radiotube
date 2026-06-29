@@ -639,9 +639,11 @@ function renderStations(stations) {
         }
 
         html += '<div class="station-card' + (isActive ? ' active' : '') + '" data-index="' + idx + '" data-uuid="' + uuid + '">' +
-            '<button class="fav-btn' + (isFav ? ' active' : '') + '" data-uuid="' + uuid + '" aria-label="Favorit">' + (isFav ? ICON.heartFill : ICON.heart) + '</button>' +
-            '<button class="share-btn" data-uuid="' + uuid + '" aria-label="Share" title="Share stasiun ini">' + ICON.share + '</button>' +
-            (isPlaylistView ? playlistBtns : '<button class="add-playlist-btn" data-uuid="' + uuid + '" aria-label="Tambah ke Playlist" title="Tambah ke Playlist">' + ICON.clipboard + '</button>') +
+            (isPlaylistView ? playlistBtns :
+                '<button class="fav-btn' + (isFav ? ' active' : '') + '" data-uuid="' + uuid + '" aria-label="Favorit">' + (isFav ? ICON.heartFill : ICON.heart) + '</button>' +
+                '<button class="share-btn" data-uuid="' + uuid + '" aria-label="Share" title="Share stasiun ini">' + ICON.share + '</button>' +
+                '<button class="add-playlist-btn" data-uuid="' + uuid + '" aria-label="Tambah ke Playlist" title="Tambah ke Playlist">' + ICON.clipboard + '</button>'
+            ) +
             '<div class="card-art">' +
                 '<div class="card-art-icon">' + cardIcon + '</div>' +
                 '<div class="playing-overlay">' +
