@@ -4,7 +4,7 @@
  * Fixed: favorites (use stationuuid), playlists, playing indicator
  */
 
-const APP_VERSION = '6.10.0';
+const APP_VERSION = '6.11.0';
 console.log('%c RadioStream v' + APP_VERSION, 'font-size:20px; font-weight:bold; color:#1a73e8;');
 
 // ============================================================
@@ -184,6 +184,14 @@ function escapeHtml(str) {
 
 function stationUuid(st) {
     return st.stationuuid || st.id;
+}
+
+function upgradeStreamUrl(url) {
+    if (!url) return url;
+    if (window.location.protocol === 'https:' && url.startsWith('http:')) {
+        return 'https:' + url.slice(5);
+    }
+    return url;
 }
 
 function updateToggleFavIcon(uuid) {
@@ -886,6 +894,33 @@ function apiReportClick(stUuid) {
     }).catch(function() {});
 }
 
+function updateCardPlayState() {
+    var activeCard = state.playingStationId ? state.stationGrid.querySelector('.station-card[data-uuid="' + state.playingStationId + '"]') : null;
+    state.stationGrid.querySelectorAll('.station-card.active').forEach(function(c) { c.classList.remove('active'); });
+    state.stationGrid.querySelectorAll('.eq-bars, .playing-indicator.active').forEach(function(el) { el.remove(); });
+    if (!activeCard) {
+        updateNowPlayingBanner();
+        return;
+    }
+    activeCard.classList.add('active');
+    var overlay = activeCard.querySelector('.playing-overlay .play-icon');
+    if (overlay) overlay.innerHTML = state.isPlaying ? ICON.pause : ICON.play;
+    if (state.isPlaying) {
+        var art = activeCard.querySelector('.card-art');
+        if (art) {
+            var eq = document.createElement('div');
+            eq.className = 'eq-bars';
+            eq.innerHTML = '<span></span><span></span><span></span><span></span>';
+            art.appendChild(eq);
+            var ind = document.createElement('div');
+            ind.className = 'playing-indicator active';
+            ind.textContent = 'Now Playing';
+            art.appendChild(ind);
+        }
+    }
+    updateNowPlayingBanner();
+}
+
 // ============================================================
 //  RENDER
 // ============================================================
@@ -1125,7 +1160,7 @@ function playStation(index) {
 }
 
 function playStationByData(station) {
-    var streamUrl = station.urlResolved || station.url;
+    var streamUrl = upgradeStreamUrl(station.urlResolved || station.url);
     if (!streamUrl) {
         showToast('Stream URL tidak tersedia');
         return;
@@ -1157,7 +1192,7 @@ function playStationByData(station) {
         updatePlayerUI(station);
         updatePlayerVisualState(true);
         updateMediaSession(station);
-        renderStations(state.stations);
+        updateCardPlayState();
     }).catch(function(err) {
         if (err.name === 'AbortError') return;
         state.isPlaying = false;
@@ -1171,7 +1206,7 @@ function playStationByData(station) {
                 updatePlayerUI(station);
                 updatePlayerVisualState(true);
                 updateMediaSession(station);
-                renderStations(state.stations);
+                updateCardPlayState();
             }).catch(function(err2) {
                 if (err2.name === 'AbortError') return;
                 var msg = getPlayErrorMessage(err2);
@@ -1195,7 +1230,12 @@ function togglePlay() {
     if (state.isPlaying) {
         state.audio.pause();
     } else {
-        state.audio.play().catch(function() {});
+        state.audio.play().catch(function(err) {
+            if (err.name === 'AbortError') return;
+            var msg = getPlayErrorMessage(err);
+            showPlayerError(msg);
+            showToast(msg);
+        });
     }
 }
 
@@ -1296,11 +1336,19 @@ function setupMediaSession() {
 // ============================================================
 function setupBackgroundPlayback() {
     document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'hidden') {
+            // pause intervals when hidden to save resources
+        }
         if (document.visibilityState === 'visible' && state.playingStationData && !state.isPlaying) {
             if (state.audio.src && state.audio.src !== '') {
                 state.audio.play().catch(function() {});
             }
         }
+    });
+    // cleanup intervals on page unload
+    window.addEventListener('pagehide', function() {
+        cancelSleepTimer();
+        if (state.alarmCheckInterval) { clearInterval(state.alarmCheckInterval); state.alarmCheckInterval = null; }
     });
 }
 
@@ -1547,7 +1595,7 @@ function setupKeyboard() {
 function shareStation(station) {
     var name = station.name || 'Radio Station';
     var url = station.urlResolved || station.url;
-    var shareUrl = 'https://syamsiridwan2-cpu.github.io/radiostream/?station=' + encodeURIComponent(stationUuid(station));
+    var shareUrl = window.location.origin + window.location.pathname.replace(/\/?$/, '/') + '?station=' + encodeURIComponent(stationUuid(station));
     var shareData = {
         title: name,
         text: 'Dengarkan ' + name + ' di RadioStream!',
@@ -1566,7 +1614,7 @@ function shareStation(station) {
 function copyShareLink(url, name) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(url).then(function() {
-            showToast('Link disalin: ' + name, 'success');
+            showToast('Link disalin: ' + name);
         });
     } else {
         var ta = document.createElement('textarea');
@@ -1575,7 +1623,7 @@ function copyShareLink(url, name) {
         ta.select();
         document.execCommand('copy');
         document.body.removeChild(ta);
-        showToast('Link disalin: ' + name, 'success');
+        showToast('Link disalin: ' + name);
     }
 }
 
@@ -1793,7 +1841,7 @@ function init() {
         state.playBtn.innerHTML = ICON.pause;
         updatePlayerVisualState(true);
         if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
-        renderStations(state.stations);
+        updateCardPlayState();
     });
 
     state.audio.addEventListener('pause', function() {
@@ -1802,7 +1850,7 @@ function init() {
         updatePlayerVisualState(false);
         stopIcyMetadata();
         if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
-        renderStations(state.stations);
+        updateCardPlayState();
     });
 
     state.audio.addEventListener('ended', function() {
@@ -1811,7 +1859,7 @@ function init() {
         updatePlayerVisualState(false);
         stopIcyMetadata();
         if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'none';
-        renderStations(state.stations);
+        updateCardPlayState();
     });
 
     state.audio.addEventListener('error', function() {
@@ -1824,7 +1872,7 @@ function init() {
         stopIcyMetadata();
         if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'none';
         showToast(msg);
-        renderStations(state.stations);
+        updateCardPlayState();
     });
 
     // Now Playing Banner play/pause button
