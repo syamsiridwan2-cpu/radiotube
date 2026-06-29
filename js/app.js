@@ -28,6 +28,8 @@ const state = {
     _searchTimer: null,
     sleepTimer: null,
     sleepTimerEnd: null,
+    alarms: [],
+    alarmCheckInterval: null,
     audio: null,
     stationGrid: null,
     statusMsg: null,
@@ -265,6 +267,125 @@ function restoreSleepTimer() {
             localStorage.removeItem('radio_sleep_end');
         }
     }
+}
+
+// ============================================================
+//  ALARM
+// ============================================================
+function loadAlarms() {
+    try {
+        var data = localStorage.getItem('radio_alarms_v1');
+        state.alarms = data ? JSON.parse(data) : [];
+    } catch (e) {
+        state.alarms = [];
+    }
+}
+
+function saveAlarms() {
+    localStorage.setItem('radio_alarms_v1', JSON.stringify(state.alarms));
+}
+
+function renderAlarmList() {
+    var list = $('alarmList');
+    if (!list) return;
+    if (!state.alarms.length) {
+        list.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:8px 0;">Belum ada alarm</p>';
+        return;
+    }
+    var dayNames = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+    list.innerHTML = state.alarms.map(function(a, i) {
+        var days = a.days && a.days.length ? a.days.map(function(d) { return dayNames[d]; }).join(', ') : 'Sekali';
+        return '<div class="alarm-item">' +
+            '<div class="alarm-item-info">' +
+                '<div class="alarm-item-time">' + a.time + '</div>' +
+                '<div class="alarm-item-days">' + days + '</div>' +
+                '<div class="alarm-item-station">' + escapeHtml(a.stationName || '') + '</div>' +
+            '</div>' +
+            '<span class="alarm-item-toggle" data-index="' + i + '">' + (a.enabled ? '🔔' : '🔕') + '</span>' +
+            '<button class="alarm-item-delete" data-index="' + i + '">✕</button>' +
+        '</div>';
+    }).join('');
+    list.querySelectorAll('.alarm-item-toggle').forEach(function(el) {
+        el.addEventListener('click', function() {
+            var idx = parseInt(el.dataset.index);
+            state.alarms[idx].enabled = !state.alarms[idx].enabled;
+            saveAlarms();
+            renderAlarmList();
+        });
+    });
+    list.querySelectorAll('.alarm-item-delete').forEach(function(el) {
+        el.addEventListener('click', function() {
+            state.alarms.splice(parseInt(el.dataset.index), 1);
+            saveAlarms();
+            renderAlarmList();
+        });
+    });
+}
+
+function populateAlarmStationSelect() {
+    var select = $('alarmStationSelect');
+    if (!select) return;
+    select.innerHTML = '<option value="">— Pilih stasiun —</option>';
+    // show favorites and recently played first
+    var seen = {};
+    function addStation(st, label) {
+        var uuid = stationUuid(st);
+        if (!uuid || seen[uuid]) return;
+        seen[uuid] = true;
+        var opt = document.createElement('option');
+        opt.value = uuid;
+        opt.textContent = (st.name || 'Unknown') + (label ? ' [' + label + ']' : '');
+        select.appendChild(opt);
+    }
+    state.recentlyPlayed.forEach(function(st) { addStation(st, 'Recent'); });
+    state.stations.forEach(function(st) { addStation(st); });
+}
+
+function showAlarmModal() {
+    populateAlarmStationSelect();
+    renderAlarmList();
+    var now = new Date();
+    var hh = String(now.getHours()).padStart(2, '0');
+    var mm = String(now.getMinutes()).padStart(2, '0');
+    $('alarmTimeInput').value = hh + ':' + mm;
+    $('alarmModal').style.display = 'flex';
+}
+
+function startAlarmChecker() {
+    if (state.alarmCheckInterval) return;
+    state.alarmCheckInterval = setInterval(function() {
+        if (!state.alarms.length) return;
+        var now = new Date();
+        var timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        var day = now.getDay();
+        state.alarms.forEach(function(a) {
+            if (!a.enabled) return;
+            var lastFired = a.lastFired || '';
+            var todayKey = now.toDateString();
+            if (lastFired === todayKey) return;
+            if (a.time !== timeStr) return;
+            if (a.days && a.days.length && a.days.indexOf(day) === -1) return;
+            fireAlarm(a);
+            a.lastFired = todayKey;
+            saveAlarms();
+        });
+    }, 30000);
+}
+
+function fireAlarm(alarm) {
+    // try to find station by uuid
+    var station = state.stations.find(function(s) { return stationUuid(s) === alarm.stationUuid; });
+    if (!station) station = state.recentlyPlayed.find(function(s) { return stationUuid(s) === alarm.stationUuid; });
+    if (station) {
+        playStationByData(station);
+    }
+    if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('🔔 Radio Alarm', {
+            body: 'Waktunya ' + (alarm.stationName || 'radio') + '!',
+            icon: 'icons/icon-192.svg'
+        });
+    }
+    showToast('🔔 Alarm: ' + (alarm.stationName || 'Radio') + ' aktif!');
 }
 
 // ============================================================
@@ -1495,6 +1616,7 @@ function init() {
     loadFavorites();
     loadRecentlyPlayed();
     loadPlaylists();
+    loadAlarms();
     renderPlaylistSidebar();
     renderRecentlyPlayedBadge();
     setupVolume();
@@ -1520,6 +1642,39 @@ function init() {
         if (e.target.files && e.target.files[0]) importPlaylists(e.target.files[0]);
         e.target.value = '';
     });
+
+    $('alarmBtn').addEventListener('click', showAlarmModal);
+    $('alarmModalClose').addEventListener('click', function() { $('alarmModal').style.display = 'none'; });
+    $('alarmModal').addEventListener('click', function(e) { if (e.target === $('alarmModal')) $('alarmModal').style.display = 'none'; });
+    $('alarmSaveBtn').addEventListener('click', function() {
+        var time = $('alarmTimeInput').value;
+        var stationSelect = $('alarmStationSelect');
+        var stationUuid = stationSelect.value;
+        var stationName = stationSelect.options[stationSelect.selectedIndex] ? stationSelect.options[stationSelect.selectedIndex].textContent : '';
+        if (!time) { showToast('Pilih waktu alarm'); return; }
+        var days = [];
+        $('alarmModal').querySelectorAll('.alarm-days input:checked').forEach(function(cb) {
+            days.push(parseInt(cb.dataset.day));
+        });
+        state.alarms.push({
+            id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+            time: time,
+            days: days,
+            stationUuid: stationUuid,
+            stationName: stationName,
+            enabled: true,
+            lastFired: ''
+        });
+        saveAlarms();
+        renderAlarmList();
+        populateAlarmStationSelect();
+        showToast('Alarm disimpan');
+    });
+    startAlarmChecker();
+    // request notification permission
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission().catch(function() {});
+    }
 
     var suggestionTimeout = null;
     state.searchInput.addEventListener('input', function() {
